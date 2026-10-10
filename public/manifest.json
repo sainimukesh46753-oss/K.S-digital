@@ -1,0 +1,17 @@
+{
+  "name": "KS Digital",
+  "short_name": "KS Digital",
+  "description": "Your digital workspace",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8faff",
+  "theme_color": "#5269e8",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
