@@ -1,100 +1,105 @@
 "use client";
 
-import { useState } from "react";
-import { ArrowDownRight, ArrowRight, ArrowUpRight, Check, ChevronDown, Code2, Compass, Layers3, Menu, MessageCircle, MonitorSmartphone, Palette, ShieldCheck, Sparkles, X, Zap } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Activity, ArrowDownRight, ArrowRight, ArrowUpRight, Bell, BriefcaseBusiness, Check, ChevronDown, CircleHelp, Command, CreditCard, FileText, FolderKanban, Home, LayoutDashboard, Menu, MessageSquare, Plus, Search, Settings, ShieldCheck, Sparkles, TrendingUp, Users, X, Zap } from "lucide-react";
 
-const services = [
-  { icon: Code2, title: "Websites & web apps", text: "Fast, responsive digital experiences designed around what your customers need to do.", tone: "lavender", items: ["Business websites", "Dashboards & portals", "Web app development"] },
-  { icon: Palette, title: "Product & UI design", text: "Clear journeys, thoughtful interfaces and visual systems that feel effortless to use.", tone: "mint", items: ["UX & interface design", "Design systems", "Responsive prototypes"] },
-  { icon: Layers3, title: "Digital foundations", text: "The reliable building blocks behind a product—from integrations to launch readiness.", tone: "peach", items: ["API integrations", "Authentication planning", "Deployment & performance"] },
+const initialProjects = [
+  { id: 1, name: "E-commerce experience", type: "Website", status: "In progress", progress: 72, date: "Oct 18, 2026", image: "photo-1556742049-0cfed4f6a45d", color: "peach" },
+  { id: 2, name: "Mobile banking UI", type: "Product design", status: "Review", progress: 88, date: "Oct 14, 2026", image: "photo-1460925895917-afdab827c52f", color: "lavender" },
+  { id: 3, name: "Analytics workspace", type: "Dashboard", status: "In progress", progress: 46, date: "Oct 24, 2026", image: "photo-1551288049-bebda4e38f71", color: "mint" },
+  { id: 4, name: "Brand refresh", type: "Branding", status: "Completed", progress: 100, date: "Oct 08, 2026", image: "photo-1558655146-d09347e92766", color: "blue" },
 ];
 
-const projects = [
-  { title: "KS Digital workspace", type: "Product interface", description: "A clean starting point for a digital-services dashboard, designed for clarity across desktop and mobile.", image: "photo-1460925895917-afdab827c52f", tag: "In development", kind: "Product UI" },
-  { title: "Commerce experience", type: "Web experience concept", description: "A product-led storefront direction with a simple browsing flow, product discovery and responsive layouts.", image: "photo-1556742049-0cfed4f6a45d", tag: "Concept", kind: "Commerce" },
-  { title: "Insights dashboard", type: "Dashboard concept", description: "A data dashboard concept that puts key information first and keeps complex screens easy to scan.", image: "photo-1551288049-bebda4e38f71", tag: "Concept", kind: "Dashboard" },
+const navItems = [
+  { label: "Overview", icon: LayoutDashboard },
+  { label: "Projects", icon: FolderKanban },
+  { label: "Messages", icon: MessageSquare },
+  { label: "Invoices", icon: CreditCard },
+  { label: "Settings", icon: Settings },
 ];
 
 export default function Home() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [activeService, setActiveService] = useState("All");
-  const [sent, setSent] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", goal: "Website or web app", message: "" });
-  const [installPrompt, setInstallPrompt] = useState(false);
-  const filteredProjects = activeService === "All" ? projects : projects.filter(p => p.kind === activeService);
+  const [activeNav, setActiveNav] = useState("Overview");
+  const [projects, setProjects] = useState(initialProjects);
+  const [query, setQuery] = useState("");
+  const [showCreate, setShowCreate] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [mobileNav, setMobileNav] = useState(false);
+  const [toast, setToast] = useState("");
+  const [newName, setNewName] = useState("");
+  const [newType, setNewType] = useState("Website");
+  const [tasks, setTasks] = useState([true, false, false]);
+  const [range, setRange] = useState("This week");
 
-  function submitContact(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const subject = encodeURIComponent("KS Digital project enquiry — " + form.goal);
-    const body = encodeURIComponent("Name: " + form.name + "\nEmail: " + form.email + "\nProject type: " + form.goal + "\n\n" + form.message);
-    setSent(true);
-    window.location.href = "mailto:hello@ksdigital.example?subject=" + subject + "&body=" + body;
+  const visibleProjects = useMemo(() => projects.filter(p => p.name.toLowerCase().includes(query.toLowerCase()) || p.type.toLowerCase().includes(query.toLowerCase())), [projects, query]);
+  const completed = projects.filter(p => p.status === "Completed").length;
+
+  function notify(message: string) {
+    setToast(message);
+    window.setTimeout(() => setToast(""), 2800);
   }
 
-  return <main>
-    <header className="nav">
-      <div className="wrap navin">
-        <a className="brand" href="#home" aria-label="KS Digital home"><span className="mark">KS</span><span>KS Digital<span className="brand-period">.</span></span></a>
-        <nav className={menuOpen ? "links open" : "links"} aria-label="Main navigation">
-          <a onClick={() => setMenuOpen(false)} href="#services">Services</a><a onClick={() => setMenuOpen(false)} href="#work">Our work</a><a onClick={() => setMenuOpen(false)} href="#approach">Approach</a><a onClick={() => setMenuOpen(false)} href="#contact">Contact</a>
-          <a className="btn small nav-cta" onClick={() => setMenuOpen(false)} href="#contact">Let’s talk <ArrowUpRight size={16}/></a>
-        </nav>
-        <button className="menu" onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? "Close menu" : "Open menu"}>{menuOpen ? <X/> : <Menu/>}</button>
-      </div>
-    </header>
+  function createProject(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!newName.trim()) return;
+    const next = { id: Date.now(), name: newName.trim(), type: newType, status: "In progress", progress: 0, date: "Just created", image: "photo-1460925895917-afdab827c52f", color: "lavender" };
+    setProjects(prev => [next, ...prev]);
+    setNewName("");
+    setShowCreate(false);
+    setActiveNav("Projects");
+    notify("Project created in this preview.");
+  }
 
-    <section className="hero" id="home">
-      <div className="wrap hero-grid">
-        <div className="hero-copy">
-          <span className="eyebrow"><span className="dot"/> DIGITAL EXPERIENCES, THOUGHTFULLY BUILT</span>
-          <h1>Good ideas deserve <span className="gradient">great digital</span> experiences.</h1>
-          <p className="lead">KS Digital helps turn ideas into clear, useful and beautifully crafted websites and digital products—made to work brilliantly on every screen.</p>
-          <div className="actions"><a className="btn" href="#contact">Start a project <ArrowRight size={17}/></a><a className="btn ghost" href="#work">Explore our work <ArrowDownRight size={17}/></a></div>
-          <div className="trust"><span className="trust-icon"><ShieldCheck size={17}/></span><span>Thoughtful design. Reliable foundations. No shortcuts.</span></div>
-        </div>
-        <div className="hero-visual" aria-label="Illustration of a digital product dashboard">
-          <div className="orb"/>
-          <div className="mock">
-            <div className="mock-top"><span className="mock-brand"><span className="mini-mark">KS</span> Your workspace</span><span className="live"><span/> Preview</span></div>
-            <div className="dash">
-              <div className="tile"><label>Projects</label><strong>Organised.</strong><small>↗ One clear overview</small></div>
-              <div className="tile"><label>Experience</label><strong>Responsive.</strong><small>✓ Ready for every screen</small></div>
-              <div className="chart"><div className="chart-head"><span>Built around your goals</span><span className="chart-dots">•••</span></div><div className="bars"><i style={{height:"32%"}}/><i style={{height:"52%"}}/><i style={{height:"43%"}}/><i style={{height:"75%"}}/><i style={{height:"61%"}}/><i style={{height:"91%"}}/><i style={{height:"70%"}}/><i style={{height:"100%"}}/></div><div className="chart-foot"><span>Plan</span><span>Design</span><span>Build</span><span>Launch</span></div></div>
-            </div>
-            <div className="mock-bottom"><span><Sparkles size={14}/> Designed with purpose</span><span>KS Digital ↗</span></div>
+  return <main className="app-shell">
+    <aside className={mobileNav ? "sidebar mobile-open" : "sidebar"}>
+      <a className="brand" href="#" onClick={() => setActiveNav("Overview")}><span className="brand-mark">KS<span>.</span></span><span className="brand-copy">KS Digital<small>CREATIVE WORKSPACE</small></span></a>
+      <div className="workspace-switch"><span className="workspace-avatar">K</span><span><b>KS Studio</b><small>Free workspace</small></span><ChevronDown size={15}/></div>
+      <div className="side-label">WORKSPACE</div>
+      <nav className="side-nav">{navItems.map(item => { const Icon = item.icon; return <button key={item.label} className={activeNav === item.label ? "side-link active" : "side-link"} onClick={() => { setActiveNav(item.label); setMobileNav(false); }}><Icon size={18}/><span>{item.label}</span>{item.label === "Messages" && <i className="nav-count">3</i>}</button>; })}</nav>
+      <div className="side-label tools-label">QUICK ACCESS</div>
+      <button className="side-link" onClick={() => { setActiveNav("Projects"); setMobileNav(false); }}><Zap size={18}/><span>My shortcuts</span></button>
+      <button className="side-link" onClick={() => notify("Help centre is a preview feature.")}><CircleHelp size={18}/><span>Help & support</span></button>
+      <div className="sidebar-spacer"/>
+      <div className="upgrade-card"><span className="upgrade-icon"><Sparkles size={17}/></span><b>Make room for more.</b><p>Your next big idea starts with a clear plan.</p><button onClick={() => notify("Plan upgrades can be connected later.")}>Explore workspace <ArrowUpRight size={14}/></button><div className="upgrade-orb"/></div>
+      <button className="profile-row" onClick={() => notify("Profile settings are coming soon.")}><span className="profile-avatar">MS</span><span><b>Workspace owner</b><small>KS Digital admin</small></span><Settings size={16}/></button>
+    </aside>
+
+    <section className="main-panel">
+      <header className="topbar">
+        <button className="mobile-menu" onClick={() => setMobileNav(!mobileNav)} aria-label="Toggle navigation">{mobileNav ? <X size={20}/> : <Menu size={20}/>}</button>
+        <div className="breadcrumbs"><span>Workspace</span><span className="crumb-slash">/</span><b>{activeNav}</b></div>
+        <div className="top-actions"><label className="search-box"><Search size={17}/><input aria-label="Search projects" placeholder="Search anything..." value={query} onChange={e => { setQuery(e.target.value); if(e.target.value) setActiveNav("Projects"); }}/><kbd>⌘ K</kbd></label><button className={showNotifications ? "icon-btn selected" : "icon-btn"} aria-label="Notifications" onClick={() => setShowNotifications(!showNotifications)}><Bell size={18}/><i/></button><span className="top-avatar">KS</span></div>
+        {showNotifications && <div className="notification-pop"><div className="pop-head"><b>Notifications</b><span>Today</span></div><div className="notification-item"><span className="notice-dot purple"/><div><b>Welcome to KS Digital</b><p>Your workspace is ready to explore.</p><small>Just now</small></div></div><div className="notification-item"><span className="notice-dot green"/><div><b>Project overview</b><p>Keep your next steps in one place.</p><small>Today</small></div></div><button onClick={() => setShowNotifications(false)}>Close notifications</button></div>}
+      </header>
+
+      <div className="content">
+        {activeNav === "Overview" ? <>
+          <div className="welcome-row"><div><div className="eyebrow"><span className="eyebrow-dot"/> YOUR SPACE TO CREATE</div><h1>Good afternoon <span className="wave">✳</span></h1><p className="welcome-sub">Here’s what’s happening with your workspace today.</p></div><button className="primary-btn" onClick={() => setShowCreate(true)}><Plus size={18}/> New project</button></div>
+
+          <section className="hero-banner"><div className="hero-content"><span className="banner-pill"><Sparkles size={13}/> YOUR IDEAS, IN MOTION</span><h2>Make your next<br/>big thing <em>happen.</em></h2><p>One calm, clear place to plan projects, follow progress and turn great ideas into real work.</p><button className="banner-btn" onClick={() => setShowCreate(true)}>Create a project <ArrowRight size={16}/></button><div className="banner-foot"><ShieldCheck size={15}/> Built for focus. Designed for momentum.</div></div><div className="banner-art"><div className="art-glow"/><div className="art-window"><div className="window-top"><span/><span/><span/><i>ks / workspace</i></div><div className="window-body"><div className="art-sidebar"><b/><i/><i/><i/><i/></div><div className="art-main"><div className="art-title"/><div className="art-subtitle"/><div className="art-cards"><span/><span/><span/></div><div className="art-chart"><i/><i/><i/><i/><i/><i/><i/><i/></div></div></div></div><div className="art-float float-top"><span className="float-check"><Check size={15}/></span><span><b>Looking good!</b><small>Progress is on track</small></span></div><div className="art-float float-bottom"><span className="float-spark"><Zap size={16}/></span><span><b>Great ideas</b><small>Made into real things</small></span></div><div className="art-star star-one">✳</div><div className="art-star star-two">✦</div></div></section>
+
+          <div className="section-title-row"><div><h2 className="section-title">Your workspace at a glance</h2><p className="section-caption">A little progress goes a long way.</p></div><button className="plain-select" onClick={() => setRange(range === "This week" ? "This month" : "This week")}>{range}<ChevronDown size={15}/></button></div>
+          <div className="stats-grid">
+            <article className="stat-card"><div className="stat-top"><span className="stat-icon purple-bg"><FolderKanban size={19}/></span><span className="stat-chip purple-chip"><TrendingUp size={12}/> Active</span></div><div className="stat-number">{projects.length.toString().padStart(2,"0")}</div><div className="stat-label">Total projects</div><div className="stat-bottom"><span className="tiny-bars"><i/><i/><i/><i/><i/><i/><i/></span><span>Across your workspace</span></div></article>
+            <article className="stat-card"><div className="stat-top"><span className="stat-icon green-bg"><Activity size={19}/></span><span className="stat-chip green-chip"><TrendingUp size={12}/> Moving</span></div><div className="stat-number">{projects.filter(p => p.status === "In progress").length.toString().padStart(2,"0")}</div><div className="stat-label">In progress</div><div className="stat-bottom"><span className="mini-progress"><i style={{width:"68%"}}/></span><span>Keep the momentum</span></div></article>
+            <article className="stat-card"><div className="stat-top"><span className="stat-icon orange-bg"><Check size={19}/></span><span className="stat-chip orange-chip">Done well</span></div><div className="stat-number">{completed.toString().padStart(2,"0")}</div><div className="stat-label">Completed projects</div><div className="stat-bottom"><span className="stat-note-dot"/>Small wins add up</div></article>
+            <article className="stat-card"><div className="stat-top"><span className="stat-icon blue-bg"><Users size={19}/></span><span className="stat-chip blue-chip">Workspace</span></div><div className="stat-number">01</div><div className="stat-label">Team members</div><div className="stat-bottom"><span className="team-stack"><i>K</i><i>S</i></span><span>Your creative home</span></div></article>
           </div>
-          <div className="floating float1"><b><Zap size={17}/></b><span>Built for real people<br/><small>Simple by design</small></span></div>
-          <div className="floating float2"><b><MonitorSmartphone size={17}/></b><span>One experience<br/><small>Every screen</small></span></div>
-        </div>
+
+          <div className="dashboard-grid">
+            <section className="panel projects-panel"><div className="panel-heading"><div><h2>Recent projects</h2><p>Your latest work, all in one place.</p></div><button className="view-all" onClick={() => setActiveNav("Projects")}>View all <ArrowRight size={15}/></button></div><div className="project-list">{projects.slice(0,3).map(p => <article className="project-row" key={p.id}><img src={"https://images.unsplash.com/"+p.image+"?auto=format&fit=crop&w=240&q=80"} alt={p.name+" visual"} loading="lazy"/><div className="project-info"><b>{p.name}</b><span>{p.type} <i>·</i> Updated recently</span><div className="row-progress"><span><i style={{width:p.progress+"%"}}/></span><small>{p.progress}%</small></div></div><span className={"status "+(p.status==="Completed"?"status-done":p.status==="Review"?"status-review":"status-progress")}>{p.status}</span><button className="row-more" aria-label={"Open "+p.name} onClick={() => notify(p.name+" selected in preview.")}>•••</button></article>)}</div><button className="all-projects-btn" onClick={() => setActiveNav("Projects")}>Explore all projects <ArrowRight size={15}/></button></section>
+            <section className="panel activity-panel"><div className="panel-heading"><div><h2>Your next steps</h2><p>Keep the little things moving.</p></div><span className="task-count">{tasks.filter(Boolean).length}/3</span></div><div className="task-progress"><span><i style={{width:(tasks.filter(Boolean).length/3*100)+"%"}}/></span><small>{Math.round(tasks.filter(Boolean).length/3*100)}% complete</small></div><div className="task-list">{["Explore your workspace","Create your first project plan","Review project milestones"].map((t,i)=><label className={tasks[i]?"task-item task-checked":"task-item"} key={t}><input type="checkbox" checked={tasks[i]} onChange={() => setTasks(prev => prev.map((v,j)=>i===j?!v:v))}/><span className="custom-check"><Check size={13}/></span><span>{t}</span></label>)}</div><div className="tip-card"><span><Sparkles size={17}/></span><div><b>A small tip for today</b><p>Break a big idea into one small next step. Progress gets easier from there.</p></div></div></section>
+          </div>
+          <section className="bottom-banner"><div className="bottom-icon"><Command size={20}/></div><div><b>A workspace that works the way you do.</b><p>Keep your projects organised and your next step clear.</p></div><button onClick={() => setActiveNav("Projects")}>See your projects <ArrowUpRight size={15}/></button></section>
+        </> : <section className="inner-page"><div className="inner-heading"><div><div className="eyebrow"><span className="eyebrow-dot"/> KS DIGITAL WORKSPACE</div><h1>{activeNav}</h1><p className="welcome-sub">{activeNav === "Projects" ? "Browse your projects and keep an eye on what’s moving." : activeNav === "Messages" ? "A home for conversations about your work." : activeNav === "Invoices" ? "Keep billing information organised in one place." : "Make this workspace feel like yours."}</p></div>{activeNav === "Projects" && <button className="primary-btn" onClick={() => setShowCreate(true)}><Plus size={18}/> New project</button>}</div>
+          {activeNav === "Projects" ? <><label className="large-search"><Search size={18}/><input placeholder="Search your projects..." value={query} onChange={e=>setQuery(e.target.value)}/></label><div className="project-cards">{visibleProjects.map(p=><article className="large-project-card" key={p.id}><div className="large-project-image"><img src={"https://images.unsplash.com/"+p.image+"?auto=format&fit=crop&w=700&q=85"} alt={p.name} loading="lazy"/><span className={"status "+(p.status==="Completed"?"status-done":p.status==="Review"?"status-review":"status-progress")}>{p.status}</span></div><div className="large-project-body"><span className="project-type">{p.type}</span><h3>{p.name}</h3><p>Next milestone · {p.date}</p><div className="row-progress"><span><i style={{width:p.progress+"%"}}/></span><small>{p.progress}%</small></div></div></article>)}</div>{visibleProjects.length===0&&<div className="empty-state"><FolderKanban size={28}/><b>No matching projects</b><p>Try another search or create a new project.</p><button className="primary-btn" onClick={()=>setShowCreate(true)}><Plus size={17}/> New project</button></div>}</> :
+          <div className="coming-panel"><div className="coming-icon"><Sparkles size={25}/></div><h2>{activeNav === "Messages" ? "Good conversations start here." : activeNav === "Invoices" ? "Your finances, kept clear." : "Make it your own."}</h2><p>{activeNav === "Messages" ? "Messaging is a preview area. Connect your preferred messaging service to enable real conversations." : activeNav === "Invoices" ? "Invoice data and payments are not connected yet. This space is ready for a secure billing integration." : "Profile preferences and account security can be connected here as the product grows."}</p><span className="coming-tag">Workspace preview · Integration needed</span><button className="secondary-btn" onClick={() => setActiveNav("Overview")}>Back to overview <ArrowRight size={15}/></button></div>}
+        </section>}
+        <footer className="app-footer"><span>© {new Date().getFullYear()} KS Digital</span><span><span className="footer-status"/> All systems designed with care</span><button onClick={() => notify("Support contact can be configured before launch.")}>Need help?</button></footer>
       </div>
     </section>
 
-    <section className="strip"><div className="wrap strip-inner"><span>IDEA TO LAUNCH</span><i/><span>DESIGN THAT MAKES SENSE</span><i/><span>RESPONSIVE BY DEFAULT</span><i/><span>BUILT TO GROW</span></div></section>
-
-    <section className="section white" id="services"><div className="wrap">
-      <div className="section-head"><span className="kicker">WHAT WE DO</span><h2>Everything you need to move<br className="desktop-only"/> from idea to online.</h2><p className="sub">The right mix of design, development and practical thinking to make your next digital step feel simple.</p></div>
-      <div className="services">{services.map(({icon: Icon,title,text,tone,items}) => <article className="service" key={title}><div className={"ico "+tone}><Icon size={23}/></div><h3>{title}</h3><p>{text}</p><ul>{items.map(item=><li key={item}><Check size={15}/>{item}</li>)}</ul><a href="#contact" className="arrow">Discuss your project <ArrowUpRight size={15}/></a></article>)}</div>
-    </div></section>
-
-    <section className="section work-section" id="work"><div className="wrap">
-      <div className="work-head"><div className="section-head"><span className="kicker">SELECTED WORK</span><h2>Thoughtful work, made visible.</h2><p className="sub">A first look at the product directions and interface work taking shape at KS Digital.</p></div><a className="text-link" href="#contact">Have a project in mind? <ArrowUpRight size={16}/></a></div>
-      <div className="filters" role="group" aria-label="Filter projects">{["All","Product UI","Commerce","Dashboard"].map(f=><button key={f} onClick={()=>setActiveService(f)} className={activeService===f?"filter active":"filter"}>{f}</button>)}</div>
-      <div className="projects">{filteredProjects.map(p=><article className="project" key={p.title}><div className="project-image"><img src={"https://images.unsplash.com/"+p.image+"?auto=format&fit=crop&w=900&q=85"} alt={p.title+" visual reference"} loading="lazy"/><span className="project-tag">{p.tag}</span></div><div className="project-body"><span className="project-type">{p.type}</span><h3>{p.title}</h3><p>{p.description}</p><div className="project-foot"><span>{p.kind}</span><a href="#contact" aria-label={"Discuss a project like "+p.title}>Discuss a similar project <ArrowUpRight size={15}/></a></div></div></article>)}</div>
-      <p className="note"><ShieldCheck size={14}/> Transparency note: concepts and in-progress work are labelled clearly. These are not presented as completed client case studies or client endorsements.</p>
-    </div></section>
-
-    <section className="section white" id="approach"><div className="wrap split">
-      <div className="feature-art"><div className="phone"><div className="phone-head"><span className="mini-mark">KS</span><span>YOUR DIGITAL SPACE　☰</span></div><h4>Make room<br/>for better ideas.</h4><p>Useful tools. Clear information. Less friction.</p><div className="phone-card"><span>Project overview</span><strong>Moving forward ✦</strong><p>A clear view of what matters next.</p></div><div className="mini-row"><i/><i/><i/></div><div className="phone-nav"><span>⌂</span><span>◫</span><span>◎</span><span>☻</span></div></div></div>
-      <div className="approach-copy"><span className="kicker">THE KS APPROACH</span><h2>Professional doesn’t have to mean complicated.</h2><p className="sub">The best digital experiences feel natural. We focus on clear structure, accessible design and reliable technology—so people can get where they need to go.</p><div className="checks"><div className="check"><span><Check size={17}/></span><div><strong>Clarity first</strong><p>Simple navigation and content that answers real questions.</p></div></div><div className="check"><span><Check size={17}/></span><div><strong>Mobile from day one</strong><p>Layouts and interactions designed for small screens as well as large ones.</p></div></div><div className="check"><span><Check size={17}/></span><div><strong>Built with care</strong><p>Performance, accessibility and maintainable code are part of the plan.</p></div></div></div><a className="btn" href="#contact">Let’s build something useful <ArrowRight size={17}/></a></div>
-    </div></section>
-
-    <section className="section process-section"><div className="wrap"><div className="section-head center"><span className="kicker">A CLEAR PROCESS</span><h2>From first conversation to launch.</h2><p className="sub">A practical, collaborative path with clear next steps at every stage.</p></div><div className="process">{[{n:"01",t:"Discover",d:"Understand your goals, users and what success should look like."},{n:"02",t:"Shape",d:"Agree on the structure, priorities and visual direction."},{n:"03",t:"Build",d:"Turn the plan into a responsive, testable digital experience."},{n:"04",t:"Launch",d:"Check the details, prepare the handover and plan what comes next."}].map(s=><article className="step" key={s.n}><span>{s.n}</span><h3>{s.t}</h3><p>{s.d}</p></article>)}</div></div></section>
-
-    <section className="section contact-section" id="contact"><div className="wrap contact-grid"><div><span className="kicker">LET’S TALK</span><h2>Have an idea?<br/><span className="gradient">Let’s make it real.</span></h2><p className="sub">Tell us a little about what you’re building. We’ll use that to start a useful conversation.</p><div className="contact-promise"><span><MessageCircle size={18}/></span><p><strong>No pressure. Just a good first conversation.</strong><br/>Share the goal, even if the details aren’t figured out yet.</p></div></div>
-      <form className="contact-form" onSubmit={submitContact}><div className="form-heading"><div><h3>Tell us about your project</h3><p>Fields marked * are required.</p></div><span className="form-spark"><Compass size={21}/></span></div><label>Your name *<input required value={form.name} onChange={e=>setForm({...form,name:e.target.value})} placeholder="How should we call you?"/></label><label>Email address *<input required type="email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} placeholder="you@example.com"/></label><label>What do you need?<span className="select-wrap"><select value={form.goal} onChange={e=>setForm({...form,goal:e.target.value})}><option>Website or web app</option><option>Mobile-first product / PWA</option><option>UI / UX design</option><option>Dashboard or portal</option><option>Something else</option></select><ChevronDown size={16}/></span></label><label>Tell us a little more *<textarea required rows={4} value={form.message} onChange={e=>setForm({...form,message:e.target.value})} placeholder="What are you hoping to create?"/></label><button className="btn submit-btn" type="submit">Send project enquiry <ArrowRight size={17}/></button>{sent&&<p className="form-success"><Check size={16}/> Your email app should open with the enquiry prepared. Please replace the placeholder email before launch.</p>}<p className="form-note">This starter opens your email app. A secure backend contact service can be connected before production.</p></form>
-    </div></section>
-
-    <footer className="footer"><div className="wrap"><div className="footer-top"><a className="brand" href="#home"><span className="mark">KS</span><span>KS Digital<span className="brand-period">.</span></span></a><p>Thoughtful digital experiences for what comes next.</p><a href="#home" className="back-top">Back to top ↑</a></div><div className="footer-bottom"><span>© {new Date().getFullYear()} KS Digital. Built with care.</span><span>Light by design <span className="footer-heart">✦</span></span><span className="footer-links"><a href="#services">Services</a><a href="#work">Work</a><a href="#contact">Contact</a></span></div></div></footer>
-    <button className="install-hint" onClick={()=>setInstallPrompt(!installPrompt)} aria-label="App installation information"><MonitorSmartphone size={17}/><span>{installPrompt?"Add to Home Screen":"App-ready design"}</span>{installPrompt&&<span className="install-pop">Use your browser menu and choose “Install app” or “Add to Home Screen” when available.</span>}</button>
+    {showCreate && <div className="modal-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget)setShowCreate(false)}}><form className="create-modal" onSubmit={createProject}><button type="button" className="modal-close" onClick={()=>setShowCreate(false)} aria-label="Close"><X size={19}/></button><span className="modal-icon"><Plus size={22}/></span><div className="eyebrow"><span className="eyebrow-dot"/> START SOMETHING NEW</div><h2>Create a project</h2><p>Give your next idea a name and a place to grow.</p><label>Project name<input required autoFocus value={newName} onChange={e=>setNewName(e.target.value)} placeholder="e.g. My new website"/></label><label>Project type<select value={newType} onChange={e=>setNewType(e.target.value)}><option>Website</option><option>Product design</option><option>Dashboard</option><option>Branding</option><option>Mobile app</option></select></label><div className="modal-actions"><button type="button" className="secondary-btn" onClick={()=>setShowCreate(false)}>Cancel</button><button type="submit" className="primary-btn"><Plus size={16}/> Create project</button></div><small>Demo data is saved only in this open session. A database is needed for permanent storage.</small></form></div>}
+    {toast && <div className="toast"><Check size={17}/>{toast}</div>}
   </main>;
 }
