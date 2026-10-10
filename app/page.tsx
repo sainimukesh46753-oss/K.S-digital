@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Activity, ArrowDownRight, ArrowRight, ArrowUpRight, Bell, BriefcaseBusiness, Check, ChevronDown, CircleHelp, Command, CreditCard, FileText, FolderKanban, Home, LayoutDashboard, Menu, MessageSquare, Plus, Search, Settings, ShieldCheck, Sparkles, TrendingUp, Users, X, Zap } from "lucide-react";
+import { Activity, ArrowDownRight, ArrowRight, ArrowUpRight, Bell, BriefcaseBusiness, Check, ChevronDown, CircleHelp, Command, CreditCard, FileText, FolderKanban, LayoutDashboard, Menu, MessageSquare, Plus, Search, Settings, ShieldCheck, Sparkles, TrendingUp, Users, X, Zap } from "lucide-react";
 
 const initialProjects = [
   { id: 1, name: "E-commerce experience", type: "Website", status: "In progress", progress: 72, date: "Oct 18, 2026", image: "photo-1556742049-0cfed4f6a45d", color: "peach" },
