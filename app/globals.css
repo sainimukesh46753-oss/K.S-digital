@@ -261,3 +261,37 @@
  .diwali-offer{padding:24px!important}
  .growth-promo{padding:20px}
 }
+
+/* KS DIGITAL — professional visual refresh */
+:root{--ink:#191a2d;--muted:#74768c;--line:#e8e9f2;--paper:#f7f8fc;--white:#fff;--purple:#6558e8;--shadow:0 18px 48px rgba(30,26,78,.07)}
+body{background:radial-gradient(ellipse at 85% 0%,rgba(223,218,255,.25),transparent 32rem),var(--paper);color:var(--ink)}
+.sidebar{background:rgba(255,255,255,.94);backdrop-filter:blur(18px);border-right-color:#e9e9f2}
+.brand-mark{border-radius:13px;background:linear-gradient(140deg,#5547d9,#9183ff);box-shadow:0 9px 22px rgba(101,88,232,.24)}
+.side-link{transition:background .18s ease,color .18s ease,transform .18s ease}.side-link:hover{transform:translateX(2px)}.side-link.active{background:linear-gradient(100deg,#f0eeff,#f8f7ff)}
+.topbar{background:rgba(255,255,255,.84);backdrop-filter:blur(18px);border-bottom-color:rgba(230,230,241,.9)}
+.content{padding-top:34px}
+.hero-banner{border-radius:26px;border-color:#e7e3ff;background:linear-gradient(115deg,#f0edff 0%,#f8f6ff 49%,#e8f8f4 100%);box-shadow:0 16px 45px rgba(79,66,171,.06)}
+.hero-content{padding:32px 34px}.hero-content h2{letter-spacing:-2px}
+.banner-pill{border-color:rgba(255,255,255,.92);box-shadow:0 4px 15px rgba(64,51,142,.04)}
+.banner-btn,.primary-btn,.diwali-cta{background:linear-gradient(135deg,#6254e6,#8171f0);box-shadow:0 8px 20px rgba(101,88,232,.22);transition:transform .2s ease,box-shadow .2s ease,filter .2s ease}
+.banner-btn:hover,.primary-btn:hover,.diwali-cta:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(101,88,232,.28);filter:saturate(1.06)}
+.stat-card,.panel,.overview-service-card,.showcase-card,.store-card,.detail-list-panel,.feedback-form-panel{border-color:#e9eaf3;box-shadow:0 4px 18px rgba(36,31,82,.025)}
+.stat-card,.panel,.store-card,.showcase-card{border-radius:19px}
+.stat-card:hover,.overview-service-card:hover,.showcase-card:hover{box-shadow:0 16px 38px rgba(41,34,99,.09)}
+.section-title{letter-spacing:-.55px}
+.overview-service-photo img,.showcase-image img,.store-image img{transition:transform .5s cubic-bezier(.2,.7,.2,1),filter .3s ease}
+.overview-service-card:hover .overview-service-photo img,.showcase-card:hover .showcase-image img,.store-card:hover .store-image img{transform:scale(1.045)}
+.store-page{padding-bottom:36px}.store-hero{position:relative;isolation:isolate;overflow:hidden;min-height:220px;padding:34px;border-radius:26px;border-color:#e5e1ff;background:linear-gradient(118deg,#efecff 0%,#f7f5ff 48%,#e6f8f2 100%);box-shadow:0 16px 42px rgba(74,61,163,.06)}
+.store-hero::after{content:"";position:absolute;z-index:-1;width:260px;height:260px;right:10%;top:-150px;border-radius:50%;border:1px solid rgba(112,99,222,.14);box-shadow:0 0 0 28px rgba(112,99,222,.035),0 0 0 58px rgba(112,99,222,.025)}
+.store-hero h2{max-width:620px;font-size:clamp(28px,3.2vw,40px);line-height:1.12;letter-spacing:-1.65px}.store-hero p{max-width:570px;font-size:13px}
+.cart-summary{position:relative;z-index:1;min-width:150px;border-radius:17px;box-shadow:0 10px 28px rgba(43,35,103,.06)}
+.large-search{min-height:54px;border-radius:15px;border-color:#e4e5f0;box-shadow:0 5px 20px rgba(38,34,84,.035);transition:border-color .2s ease,box-shadow .2s ease}.large-search:focus-within{border-color:#a9a0f6;box-shadow:0 0 0 4px rgba(101,88,232,.09)}
+.store-grid{gap:20px}.store-card{border-radius:20px;transition:transform .24s ease,box-shadow .24s ease,border-color .24s ease}.store-card:hover{transform:translateY(-5px);border-color:#dcd7ff;box-shadow:0 20px 42px rgba(41,34,99,.10)}
+.store-image{height:190px;overflow:hidden}.store-image::after{content:"";position:absolute;inset:40% 0 0;background:linear-gradient(transparent,rgba(20,18,44,.12));pointer-events:none}.store-image>span{z-index:1;border:1px solid rgba(255,255,255,.78);box-shadow:0 4px 14px rgba(28,25,65,.08);backdrop-filter:blur(10px)}
+.store-card-body{padding:19px}.store-card-body h3{font-size:16px;letter-spacing:-.3px}.store-card-body p{font-size:12px;line-height:1.75;min-height:43px}.store-buy-row{padding-top:15px}.store-buy-row>b{font-size:19px;letter-spacing:-.5px}
+.store-checkout{position:sticky;bottom:14px;z-index:15;border-radius:18px;box-shadow:0 12px 38px rgba(34,29,78,.12);backdrop-filter:blur(16px);background:rgba(255,255,255,.94)}
+.diwali-offer,.growth-promo,.bottom-banner{border-radius:22px}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid rgba(101,88,232,.35);outline-offset:3px}
+@media(max-width:900px){.store-hero{padding:27px}.store-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.store-image{height:175px}}
+@media(max-width:600px){.content{padding-top:20px}.hero-content{padding:23px 21px 19px}.store-hero{min-height:0;align-items:flex-start;flex-direction:column;padding:23px 20px;gap:18px;border-radius:21px}.store-hero h2{font-size:29px;letter-spacing:-1.1px}.store-hero p{font-size:12px}.cart-summary{width:100%;justify-content:flex-start}.store-grid{grid-template-columns:minmax(0,1fr);gap:14px}.store-image{height:205px}.store-card-body{padding:17px}.store-checkout{position:static;flex-wrap:wrap;gap:12px;padding:16px}.store-checkout>div{flex-basis:calc(100% - 90px)}.store-checkout>strong{margin-left:auto}.store-checkout .primary-btn{width:100%}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}}
