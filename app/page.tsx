@@ -35,6 +35,7 @@ const navItems = [
 ];
 
 export default function Home() {
+  const [heroSlide, setHeroSlide] = useState(0);
   const [greeting, setGreeting] = useState("Good morning");
   useEffect(() => {
     const updateGreeting = () => {
@@ -43,6 +44,11 @@ export default function Home() {
     };
     updateGreeting();
     const timer = window.setInterval(updateGreeting, 60000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setHeroSlide(current => (current + 1) % 3), 5500);
     return () => window.clearInterval(timer);
   }, []);
 
@@ -108,7 +114,7 @@ export default function Home() {
         {activeNav === "Overview" ? <>
           <div className="welcome-row"><div><div className="eyebrow"><span className="eyebrow-dot"/> YOUR SPACE TO CREATE</div><h1>{greeting} <span className="wave">✳</span></h1><p className="welcome-sub">Here’s what’s happening with your workspace today.</p></div><button className="primary-btn" onClick={() => setShowCreate(true)}><Plus size={18}/> New project</button></div>
 
-          <section className="hero-banner"><div className="hero-content"><span className="banner-pill"><Sparkles size={13}/> YOUR IDEAS, IN MOTION</span><h2>Make your next<br/>big thing <em>happen.</em></h2><p>One calm, clear place to plan projects, follow progress and turn great ideas into real work.</p><button className="banner-btn" onClick={() => setShowCreate(true)}>Create a project <ArrowRight size={16}/></button><div className="banner-foot"><ShieldCheck size={15}/> Built for focus. Designed for momentum.</div></div><div className="banner-art"><div className="art-glow"/><div className="art-window"><div className="window-top"><span/><span/><span/><i>ks / workspace</i></div><div className="window-body"><div className="art-sidebar"><b/><i/><i/><i/><i/></div><div className="art-main"><div className="art-title"/><div className="art-subtitle"/><div className="art-cards"><span/><span/><span/></div><div className="art-chart"><i/><i/><i/><i/><i/><i/><i/><i/></div></div></div></div><div className="art-float float-top"><span className="float-check"><Check size={15}/></span><span><b>Looking good!</b><small>Progress is on track</small></span></div><div className="art-float float-bottom"><span className="float-spark"><Zap size={16}/></span><span><b>Great ideas</b><small>Made into real things</small></span></div><div className="art-star star-one">✳</div><div className="art-star star-two">✦</div></div></section>
+          <section className={"hero-banner hero-slide-" + heroSlide} aria-live="polite"><div className="hero-content"><span className="banner-pill"><Sparkles size={13}/> {["YOUR IDEAS, IN MOTION","DESIGN THAT MOVES YOU","YOUR NEXT BIG WIN"][heroSlide]}</span><h2>{["Make your next","Bring your vision","Turn plans into"][heroSlide]}<br/>{["big thing","bold ideas","real progress"][heroSlide]} <em>{["happen.","to life.","today."][heroSlide]}</em></h2><p>{["One calm, clear place to plan projects, follow progress and turn great ideas into real work.","Thoughtful digital design and creative services to help your brand stand out with confidence.","Keep projects moving, see what matters and make your next milestone feel achievable."][heroSlide]}</p><button className="banner-btn" onClick={() => heroSlide === 1 ? setActiveNav("Services") : heroSlide === 2 ? setActiveNav("Projects") : setShowCreate(true)}>{["Create a project","Explore services","View projects"][heroSlide]} <ArrowRight size={16}/></button><div className="banner-foot"><ShieldCheck size={15}/> {["Built for focus. Designed for momentum.","Creative thinking. Clear digital experiences.","Small steps today. Big progress tomorrow."][heroSlide]}</div><div className="hero-dots" aria-label="Choose banner slide">{[0,1,2].map(index => <button key={index} className={heroSlide === index ? "hero-dot active" : "hero-dot"} aria-label={"Show slide " + (index+1)} onClick={() => setHeroSlide(index)}/>)}</div></div><div className="banner-art"><div className="art-glow"/><div className="art-window"><div className="window-top"><span/><span/><span/><i>{["ks / workspace","ks / creative studio","ks / project flow"][heroSlide]}</i></div><div className="window-body"><div className="art-sidebar"><b/><i/><i/><i/><i/></div><div className="art-main"><div className="art-title"/><div className="art-subtitle"/><div className="art-cards"><span/><span/><span/></div><div className="art-chart"><i/><i/><i/><i/><i/><i/><i/><i/></div></div></div></div><div className="art-float float-top"><span className="float-check"><Check size={15}/></span><span><b>{["Looking good!","Made for your brand","Milestone reached"][heroSlide]}</b><small>{["Progress is on track","Ideas taking shape","Moving in the right direction"][heroSlide]}</small></span></div><div className="art-float float-bottom"><span className="float-spark"><Zap size={16}/></span><span><b>{["Great ideas","Fresh creativity","Real progress"][heroSlide]}</b><small>{["Made into real things","Designed to stand out","One step at a time"][heroSlide]}</small></span></div><div className="art-star star-one">✳</div><div className="art-star star-two">✦</div></div></section>
 
           <div className="section-title-row"><div><h2 className="section-title">Your workspace at a glance</h2><p className="section-caption">A little progress goes a long way.</p></div><button className="plain-select" onClick={() => setRange(range === "This week" ? "This month" : "This week")}>{range}<ChevronDown size={15}/></button></div>
           <div className="stats-grid">
