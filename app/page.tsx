@@ -48,7 +48,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const timer = window.setInterval(() => setHeroSlide(current => (current + 1) % 3), 5500);
+    const timer = window.setInterval(() => setHeroSlide(current => (current + 1) % 3), 10000);
     return () => window.clearInterval(timer);
   }, []);
 
