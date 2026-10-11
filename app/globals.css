@@ -355,3 +355,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 .invoice-note b{color:#35304b}
 @media(max-width:760px){.store-results-bar{align-items:flex-start;flex-direction:column;gap:5px}.catalog-intro{padding:24px}.store-image img{height:170px}.billing-stats-grid{grid-template-columns:1fr}.billing-table-head{display:none}.invoice-row{grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:15px}.invoice-row>span:nth-child(2){grid-column:1}.invoice-row>span:nth-child(3){grid-column:1}.invoice-row>strong{grid-column:2;grid-row:1 / span 2;align-self:start}.invoice-doc{grid-column:1 / -1}.showcase-image img{height:190px}}
 @media(prefers-reduced-motion:reduce){.store-card,.store-image img,.showcase-card,.showcase-image img{transition:none}}
+
+
+/* Store website QR access panel */
+.store-qr-panel{display:flex;align-items:center;justify-content:space-between;gap:28px;margin-top:22px;padding:26px;border:1px solid var(--line,#e8e6ef);border-radius:22px;background:linear-gradient(135deg,rgba(119,91,232,.08),rgba(255,255,255,.94));}
+.store-qr-copy{max-width:650px}.store-qr-copy h3{margin:10px 0 8px;font-size:22px;letter-spacing:-.5px}.store-qr-copy p{margin:0 0 12px;color:var(--muted,#777486);line-height:1.65}.store-qr-copy small{display:block;color:var(--muted,#777486);line-height:1.6;max-width:620px}
+.store-qr-image{display:flex;flex-direction:column;align-items:center;gap:8px;flex-shrink:0;padding:12px;background:#fff;border:1px solid #ece9f7;border-radius:16px;color:#5140a6;text-decoration:none;font-size:11px;font-weight:700}.store-qr-image img{display:block;width:180px;height:180px;object-fit:contain}
+@media(max-width:640px){.store-qr-panel{flex-direction:column;align-items:flex-start;padding:18px}.store-qr-image{align-self:center}.store-qr-image img{width:170px;height:170px}}
