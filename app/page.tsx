@@ -20,11 +20,21 @@ const serviceCatalog = [
   { title: "Digital marketing creatives", short: "Campaign visuals that make your next promotion stand out.", tag: "CAMPAIGN DESIGN", image: "photo-1432888622747-4eb9a8efeb07", icon: Megaphone, tone: "rose", detail: "Campaign-ready creative assets for launches, seasonal promotions and paid or organic social campaigns.", includes: ["Campaign key visual", "Ad and story sizes", "Offer banner design", "Creative consistency checklist"], timeline: "2–5 days" },
 ];
 
-const storeProducts = [\n  { id: "p1", name: "Business website starter", category: "Websites", price: 4999, image: "photo-1467232004584-a241de8bcf5d", description: "A polished one-page website package for a small business." },\n  { id: "p2", name: "Social media creative pack", category: "Design", price: 1499, image: "photo-1541701494587-cb58502866ab", description: "A starter set of branded social posts and promotional graphics." },\n  { id: "p3", name: "Brand identity starter", category: "Branding", price: 2999, image: "photo-1558655146-d09347e92766", description: "A practical visual identity starter for a growing brand." },\n  { id: "p4", name: "Dashboard UI starter", category: "Design", price: 3999, image: "photo-1551288049-bebda4e38f71", description: "A clean dashboard interface concept for your product." },\n  { id: "p5", name: "SEO foundation audit", category: "Marketing", price: 1999, image: "photo-1460925895917-afdab827c52f", description: "An initial SEO review with a prioritised improvement checklist." },\n  { id: "p6", name: "Mobile app UI starter", category: "Design", price: 3499, image: "photo-1512941937669-90a1b58e7e9c", description: "A small-screen-first interface concept for your app idea." },\n];\n\nconst navItems = [
+const storeProducts = [
+  { id: "p1", name: "Business website starter", category: "Websites", price: 4999, image: "photo-1467232004584-a241de8bcf5d", description: "A polished one-page website package for a small business." },
+  { id: "p2", name: "Social media creative pack", category: "Design", price: 1499, image: "photo-1541701494587-cb58502866ab", description: "A starter set of branded social posts and promotional graphics." },
+  { id: "p3", name: "Brand identity starter", category: "Branding", price: 2999, image: "photo-1558655146-d09347e92766", description: "A practical visual identity starter for a growing brand." },
+  { id: "p4", name: "Dashboard UI starter", category: "Design", price: 3999, image: "photo-1551288049-bebda4e38f71", description: "A clean dashboard interface concept for your product." },
+  { id: "p5", name: "SEO foundation audit", category: "Marketing", price: 1999, image: "photo-1460925895917-afdab827c52f", description: "An initial SEO review with a prioritised improvement checklist." },
+  { id: "p6", name: "Mobile app UI starter", category: "Design", price: 3499, image: "photo-1512941937669-90a1b58e7e9c", description: "A small-screen-first interface concept for your app idea." },
+];
+
+const navItems = [
   { label: "Overview", icon: LayoutDashboard },
   { label: "My profile", icon: Users },
   { label: "Projects", icon: FolderKanban },
-  { label: "Services", icon: BriefcaseBusiness },\n  { label: "Store", icon: ShoppingBag },
+  { label: "Services", icon: BriefcaseBusiness },
+  { label: "Store", icon: ShoppingBag },
   { label: "Portfolio", icon: Sparkles },
   { label: "My files", icon: FileText },
   { label: "Messages", icon: MessageSquare },
@@ -35,7 +45,14 @@ const storeProducts = [\n  { id: "p1", name: "Business website starter", categor
 ];
 
 export default function Home() {
-  const [heroSlide, setHeroSlide] = useState(0);\n  const [darkMode, setDarkMode] = useState(false);\n  const [cart, setCart] = useState<string[]>([]);\n  const [storeQuery, setStoreQuery] = useState("");\n  const [chatOpen, setChatOpen] = useState(false);\n  const [chatInput, setChatInput] = useState("");\n  const [chatMessages, setChatMessages] = useState([{ from: "bot", text: "Hi! I’m the KS Digital assistant. Ask me about our services, project timelines or pricing." }]);\n  const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
+  const [heroSlide, setHeroSlide] = useState(0);
+  const [darkMode, setDarkMode] = useState(false);
+  const [cart, setCart] = useState<string[]>([]);
+  const [storeQuery, setStoreQuery] = useState("");
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatInput, setChatInput] = useState("");
+  const [chatMessages, setChatMessages] = useState([{ from: "bot", text: "Hi! I’m the KS Digital assistant. Ask me about our services, project timelines or pricing." }]);
+  const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
   const [greeting, setGreeting] = useState("Good morning");
   useEffect(() => {
     const updateGreeting = () => {
@@ -70,7 +87,9 @@ export default function Home() {
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
 
   const visibleProjects = useMemo(() => projects.filter(p => p.name.toLowerCase().includes(query.toLowerCase()) || p.type.toLowerCase().includes(query.toLowerCase())), [projects, query]);
-  const completed = projects.filter(p => p.status === "Completed").length;\n  const filteredProducts = storeProducts.filter(product => (product.name + " " + product.category + " " + product.description).toLowerCase().includes(storeQuery.toLowerCase()));\n  const cartTotal = cart.reduce((sum, id) => sum + (storeProducts.find(product => product.id === id)?.price || 0), 0);
+  const completed = projects.filter(p => p.status === "Completed").length;
+  const filteredProducts = storeProducts.filter(product => (product.name + " " + product.category + " " + product.description).toLowerCase().includes(storeQuery.toLowerCase()));
+  const cartTotal = cart.reduce((sum, id) => sum + (storeProducts.find(product => product.id === id)?.price || 0), 0);
 
   function notify(message: string) {
     setToast(message);
@@ -88,7 +107,17 @@ export default function Home() {
     notify("Project created in this preview.");
   }
 
-  function sendAssistantMessage(e: React.FormEvent<HTMLFormElement>) {\n    e.preventDefault();\n    const question = chatInput.trim();\n    if (!question) return;\n    const lower = question.toLowerCase();\n    const answer = lower.includes("price") || lower.includes("cost") ? "Our sample packages start at ₹1,499 for design creatives, ₹1,999 for an SEO foundation audit and ₹4,999 for a business website starter. Final pricing depends on your requirements." : lower.includes("time") || lower.includes("timeline") || lower.includes("how long") ? "Typical timelines range from 2–5 days for creative work, 1–3 weeks for website or UI/UX projects, and 2–4 weeks for app/dashboard design." : lower.includes("contact") || lower.includes("message") ? "Open Messages in the left menu to draft a project enquiry. Live delivery to an inbox needs a connected messaging provider." : lower.includes("otp") || lower.includes("login") ? "Secure OTP login can be enabled after the authentication provider and server configuration are connected." : "I can help with website design, graphic design, UI/UX, branding, SEO and digital marketing. Open Services to explore options, or Messages to draft an enquiry.";\n    setChatMessages(previous => [...previous, { from: "user", text: question }, { from: "bot", text: answer }]);\n    setChatInput("");\n  }\n\n  return <main className={darkMode ? "app-shell theme-dark" : "app-shell"}>
+  function sendAssistantMessage(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const question = chatInput.trim();
+    if (!question) return;
+    const lower = question.toLowerCase();
+    const answer = lower.includes("price") || lower.includes("cost") ? "Our sample packages start at ₹1,499 for design creatives, ₹1,999 for an SEO foundation audit and ₹4,999 for a business website starter. Final pricing depends on your requirements." : lower.includes("time") || lower.includes("timeline") || lower.includes("how long") ? "Typical timelines range from 2–5 days for creative work, 1–3 weeks for website or UI/UX projects, and 2–4 weeks for app/dashboard design." : lower.includes("contact") || lower.includes("message") ? "Open Messages in the left menu to draft a project enquiry. Live delivery to an inbox needs a connected messaging provider." : lower.includes("otp") || lower.includes("login") ? "Secure OTP login can be enabled after the authentication provider and server configuration are connected." : "I can help with website design, graphic design, UI/UX, branding, SEO and digital marketing. Open Services to explore options, or Messages to draft an enquiry.";
+    setChatMessages(previous => [...previous, { from: "user", text: question }, { from: "bot", text: answer }]);
+    setChatInput("");
+  }
+
+  return <main className={darkMode ? "app-shell theme-dark" : "app-shell"}>
     <aside className={mobileNav ? "sidebar mobile-open" : "sidebar"}>
       <a className="brand" href="#" onClick={() => setActiveNav("Overview")}><span className="brand-mark">KS<span>.</span></span><span className="brand-copy">KS Digital<small>CREATIVE WORKSPACE</small></span></a>
       <div className="workspace-switch"><span className="workspace-avatar">K</span><span><b>KS Studio</b><small>Creative workspace</small></span><ChevronDown size={15}/></div>
