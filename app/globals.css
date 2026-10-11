@@ -295,3 +295,63 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 @media(max-width:900px){.store-hero{padding:27px}.store-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.store-image{height:175px}}
 @media(max-width:600px){.content{padding-top:20px}.hero-content{padding:23px 21px 19px}.store-hero{min-height:0;align-items:flex-start;flex-direction:column;padding:23px 20px;gap:18px;border-radius:21px}.store-hero h2{font-size:29px;letter-spacing:-1.1px}.store-hero p{font-size:12px}.cart-summary{width:100%;justify-content:flex-start}.store-grid{grid-template-columns:minmax(0,1fr);gap:14px}.store-image{height:205px}.store-card-body{padding:17px}.store-checkout{position:static;flex-wrap:wrap;gap:12px;padding:16px}.store-checkout>div{flex-basis:calc(100% - 90px)}.store-checkout>strong{margin-left:auto}.store-checkout .primary-btn{width:100%}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}}
+
+
+/* KS Digital storefront, portfolio and billing polish */
+.store-results-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:20px 0 14px;padding:14px 18px;border:1px solid #e8e5f2;border-radius:16px;background:linear-gradient(110deg,#fff 0%,#f7f5ff 58%,#f0fbf7 100%);color:#27243b}
+.store-results-bar b{font-size:14px;font-weight:800;letter-spacing:-.02em}
+.store-results-bar span{font-size:12px;color:#77738b}
+.store-grid{align-items:stretch;gap:20px}
+.store-card{overflow:hidden;border:1px solid #e9e7f1;border-radius:20px;background:#fff;box-shadow:0 5px 18px rgba(37,26,76,.045);transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.store-card:hover{transform:translateY(-4px);border-color:#d7cff9;box-shadow:0 18px 42px rgba(48,32,104,.12)}
+.store-image{position:relative;overflow:hidden;background:#f0edf8}
+.store-image img{display:block;width:100%;height:190px;object-fit:cover;transition:transform .35s ease}
+.store-card:hover .store-image img{transform:scale(1.045)}
+.store-image>span{position:absolute;left:12px;top:12px;border:1px solid rgba(255,255,255,.6);border-radius:999px;padding:6px 10px;background:rgba(255,255,255,.91);color:#51418e;font-size:10px;font-weight:800;letter-spacing:.05em}
+.store-card-body{display:flex;flex-direction:column;height:calc(100% - 190px);padding:18px}
+.store-card-body h3{font-size:16px;line-height:1.35;letter-spacing:-.025em;color:#26213b}
+.store-card-body p{font-size:12px;line-height:1.65;color:#77748a}
+.store-buy-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:16px}
+.store-buy-row>b{font-size:18px;font-weight:850;letter-spacing:-.035em;color:#2b2450}
+.store-buy-row .primary-btn,.store-buy-row .secondary-btn{white-space:nowrap;padding:9px 12px;font-size:12px}
+.catalog-intro{position:relative;overflow:hidden;border:1px solid #e9e4fb;border-radius:24px;padding:34px;background:radial-gradient(ellipse at 90% 5%,rgba(184,163,255,.35),transparent 36%),linear-gradient(120deg,#fff 0%,#f8f6ff 55%,#f0fbf8 100%);margin-bottom:24px}
+.catalog-intro h2{max-width:700px;font-size:clamp(28px,3.2vw,42px);line-height:1.12;letter-spacing:-.045em;color:#25203d}
+.catalog-intro p{max-width:650px;color:#716d83;line-height:1.75}
+.showcase-grid{gap:22px}
+.showcase-card{overflow:hidden;border:1px solid #e9e6f1;border-radius:22px;background:#fff;box-shadow:0 7px 24px rgba(33,25,66,.05);transition:transform .2s ease,box-shadow .2s ease}
+.showcase-card:hover{transform:translateY(-4px);box-shadow:0 20px 45px rgba(33,25,66,.11)}
+.showcase-image{position:relative;overflow:hidden;background:#f1eef9}
+.showcase-image img{display:block;width:100%;height:220px;object-fit:cover;transition:transform .35s ease}
+.showcase-card:hover .showcase-image img{transform:scale(1.04)}
+.showcase-image>span{position:absolute;left:14px;top:14px;border-radius:999px;padding:7px 11px;background:rgba(255,255,255,.93);color:#574392;font-size:10px;font-weight:800;letter-spacing:.07em}
+.showcase-card-body{padding:20px}
+.showcase-card-body h3{margin:10px 0 8px;color:#26213b;font-size:18px;letter-spacing:-.025em}
+.showcase-card-body p{min-height:58px;color:#77748a;font-size:13px;line-height:1.7}
+.concept-label{display:inline-flex;margin-top:12px;padding:7px 10px;border-radius:8px;background:#f4f1fc;color:#6754a3;font-size:11px;font-weight:700}
+.billing-summary{position:relative;overflow:hidden;border:1px solid #e8e3fa;border-radius:22px;padding:28px;background:radial-gradient(ellipse at 92% 0%,rgba(187,169,255,.32),transparent 36%),linear-gradient(120deg,#fff,#f7f5ff 65%,#effaf7)}
+.billing-summary h2{margin:12px 0 6px;color:#25203d;font-size:30px;letter-spacing:-.04em}
+.billing-summary p{color:#716d83}
+.billing-stats-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:20px 0}
+.billing-stats-grid article{display:flex;flex-direction:column;gap:7px;padding:20px;border:1px solid #ebe8f3;border-radius:18px;background:#fff}
+.billing-stats-grid small,.billing-stats-grid span{color:#77748a;font-size:12px}
+.billing-stats-grid strong{color:#2c2450;font-size:26px;letter-spacing:-.04em}
+.billing-table{overflow:hidden;border:1px solid #e9e6f1;border-radius:18px;background:#fff}
+.billing-table-head,.invoice-row{display:grid;grid-template-columns:minmax(220px,1.7fr) minmax(105px,.8fr) minmax(135px,1fr) minmax(110px,.7fr);align-items:center;gap:14px;padding:16px 20px}
+.billing-table-head{background:#f8f7fc;color:#77738b;font-size:10px;font-weight:800;letter-spacing:.09em}
+.invoice-row{border-top:1px solid #f0eef6;color:#514d64;font-size:12px}
+.invoice-doc{display:flex;align-items:center;gap:12px;min-width:0}
+.invoice-doc-icon{display:grid;place-items:center;flex:0 0 38px;width:38px;height:38px;border-radius:12px;background:#f0edff;color:#6c54bd}
+.invoice-doc>span:last-child{display:flex;flex-direction:column;gap:5px;min-width:0}
+.invoice-doc b{color:#2b2543;font-size:12px}
+.invoice-doc small{color:#77748a;font-size:11px}
+.invoice-row>strong{color:#2b2543;font-size:14px}
+.invoice-status{display:inline-flex;align-items:center;width:max-content;border-radius:999px;padding:6px 9px;font-size:10px;font-style:normal;font-weight:800}
+.invoice-status.draft{background:#f0edff;color:#6c54bd}
+.invoice-status.paid{background:#e5f8ee;color:#1e8656}
+.invoice-status.review{background:#fff3df;color:#a66a13}
+.invoice-note{display:flex;align-items:flex-start;gap:12px;margin-top:16px;padding:16px 18px;border:1px solid #e6e2f5;border-radius:16px;background:#faf9ff;color:#706c82}
+.invoice-note>svg{flex:0 0 auto;color:#6c54bd;margin-top:2px}
+.invoice-note p{margin:0;font-size:12px;line-height:1.7}
+.invoice-note b{color:#35304b}
+@media(max-width:760px){.store-results-bar{align-items:flex-start;flex-direction:column;gap:5px}.catalog-intro{padding:24px}.store-image img{height:170px}.billing-stats-grid{grid-template-columns:1fr}.billing-table-head{display:none}.invoice-row{grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:15px}.invoice-row>span:nth-child(2){grid-column:1}.invoice-row>span:nth-child(3){grid-column:1}.invoice-row>strong{grid-column:2;grid-row:1 / span 2;align-self:start}.invoice-doc{grid-column:1 / -1}.showcase-image img{height:190px}}
+@media(prefers-reduced-motion:reduce){.store-card,.store-image img,.showcase-card,.showcase-image img{transition:none}}
