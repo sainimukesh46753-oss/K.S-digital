@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Activity, ArrowDownRight, ArrowRight, ArrowUpRight, Bell, BriefcaseBusiness, Check, ChevronDown, CircleHelp, Command, CreditCard, FileText, FolderKanban, LayoutDashboard, Menu, MessageSquare, Plus, Search, Settings, ShieldCheck, Sparkles, TrendingUp, Users, X, Zap, Palette, SearchCheck, MousePointer2, Code2, Smartphone, Megaphone, Layers3 } from "lucide-react";
 
 const initialProjects = [
@@ -35,6 +35,17 @@ const navItems = [
 ];
 
 export default function Home() {
+  const [greeting, setGreeting] = useState("Good morning");
+  useEffect(() => {
+    const updateGreeting = () => {
+      const hour = new Date().getHours();
+      setGreeting(hour >= 5 && hour < 12 ? "Good morning" : hour >= 12 && hour < 17 ? "Good afternoon" : "Good evening");
+    };
+    updateGreeting();
+    const timer = window.setInterval(updateGreeting, 60000);
+    return () => window.clearInterval(timer);
+  }, []);
+
   const [activeNav, setActiveNav] = useState("Overview");
   const [projects, setProjects] = useState(initialProjects);
   const [query, setQuery] = useState("");
@@ -95,7 +106,7 @@ export default function Home() {
 
       <div className="content">
         {activeNav === "Overview" ? <>
-          <div className="welcome-row"><div><div className="eyebrow"><span className="eyebrow-dot"/> YOUR SPACE TO CREATE</div><h1>Good afternoon <span className="wave">✳</span></h1><p className="welcome-sub">Here’s what’s happening with your workspace today.</p></div><button className="primary-btn" onClick={() => setShowCreate(true)}><Plus size={18}/> New project</button></div>
+          <div className="welcome-row"><div><div className="eyebrow"><span className="eyebrow-dot"/> YOUR SPACE TO CREATE</div><h1>{greeting} <span className="wave">✳</span></h1><p className="welcome-sub">Here’s what’s happening with your workspace today.</p></div><button className="primary-btn" onClick={() => setShowCreate(true)}><Plus size={18}/> New project</button></div>
 
           <section className="hero-banner"><div className="hero-content"><span className="banner-pill"><Sparkles size={13}/> YOUR IDEAS, IN MOTION</span><h2>Make your next<br/>big thing <em>happen.</em></h2><p>One calm, clear place to plan projects, follow progress and turn great ideas into real work.</p><button className="banner-btn" onClick={() => setShowCreate(true)}>Create a project <ArrowRight size={16}/></button><div className="banner-foot"><ShieldCheck size={15}/> Built for focus. Designed for momentum.</div></div><div className="banner-art"><div className="art-glow"/><div className="art-window"><div className="window-top"><span/><span/><span/><i>ks / workspace</i></div><div className="window-body"><div className="art-sidebar"><b/><i/><i/><i/><i/></div><div className="art-main"><div className="art-title"/><div className="art-subtitle"/><div className="art-cards"><span/><span/><span/></div><div className="art-chart"><i/><i/><i/><i/><i/><i/><i/><i/></div></div></div></div><div className="art-float float-top"><span className="float-check"><Check size={15}/></span><span><b>Looking good!</b><small>Progress is on track</small></span></div><div className="art-float float-bottom"><span className="float-spark"><Zap size={16}/></span><span><b>Great ideas</b><small>Made into real things</small></span></div><div className="art-star star-one">✳</div><div className="art-star star-two">✦</div></div></section>
 
