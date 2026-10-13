@@ -64,6 +64,11 @@ const navItems = [
   { label: "Projects", icon: FolderKanban },
   { label: "Services", icon: BriefcaseBusiness },
   { label: "Store", icon: ShoppingBag },
+  { label: "Checkout", icon: CreditCard },
+  { label: "My orders", icon: ShoppingBag },
+  { label: "Track order", icon: SearchCheck },
+  { label: "Customer account", icon: Users },
+  { label: "Notifications", icon: Bell },
   { label: "Growth Kit", icon: Gift },
   { label: "Portfolio", icon: Sparkles },
   { label: "My files", icon: FileText },
@@ -74,10 +79,26 @@ const navItems = [
   { label: "Admin panel", icon: ShieldCheck },
 ];
 
+type StoreOrder = {
+  id: string; trackingCode: string; items: { id: string; name: string; price: number }[];
+  total: number; customerName: string; email: string; phone: string; address: string; createdAt: string;
+  status: "Quote requested" | "Confirmed" | "In progress" | "Shipped" | "Delivered" | "Cancelled";
+  paymentStatus: string;
+};
+type StoreNotification = { id: string; title: string; body: string; date: string; read: boolean };
+
 export default function Home() {
   const [heroSlide, setHeroSlide] = useState(0);
   const [darkMode, setDarkMode] = useState(false);
   const [cart, setCart] = useState<string[]>([]);
+  const [orders, setOrders] = useState<StoreOrder[]>([]);
+  const [customerProfile, setCustomerProfile] = useState({ name: "", email: "", phone: "", address: "" });
+  const [checkoutForm, setCheckoutForm] = useState({ name: "", email: "", phone: "", address: "" });
+  const [trackingQuery, setTrackingQuery] = useState("");
+  const [otpPhone, setOtpPhone] = useState("");
+  const [otpCode, setOtpCode] = useState("");
+  const [notifications, setNotifications] = useState<StoreNotification[]>([]);
+  const [storageReady, setStorageReady] = useState(false);
   const [storeQuery, setStoreQuery] = useState("");
   const [chatOpen, setChatOpen] = useState(false);
   const [chatInput, setChatInput] = useState("");
@@ -123,14 +144,92 @@ export default function Home() {
   const [calcPages, setCalcPages] = useState("5");
   const [calcComplexity, setCalcComplexity] = useState("Standard");
 
+  useEffect(() => {
+    try {
+      const savedCart = window.localStorage.getItem("ksd_cart");
+      const savedOrders = window.localStorage.getItem("ksd_orders");
+      const savedProfile = window.localStorage.getItem("ksd_customer");
+      const savedNotifications = window.localStorage.getItem("ksd_notifications");
+      if (savedCart) setCart(JSON.parse(savedCart));
+      if (savedOrders) setOrders(JSON.parse(savedOrders));
+      if (savedProfile) setCustomerProfile(JSON.parse(savedProfile));
+      if (savedNotifications) setNotifications(JSON.parse(savedNotifications));
+    } catch { /* Ignore invalid browser-local data. */ }
+    setStorageReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!storageReady) return;
+    try {
+      window.localStorage.setItem("ksd_cart", JSON.stringify(cart));
+      window.localStorage.setItem("ksd_orders", JSON.stringify(orders));
+      window.localStorage.setItem("ksd_customer", JSON.stringify(customerProfile));
+      window.localStorage.setItem("ksd_notifications", JSON.stringify(notifications));
+    } catch { /* Browser storage may be disabled or full. */ }
+  }, [storageReady, cart, orders, customerProfile, notifications]);
+
   const visibleProjects = useMemo(() => projects.filter(p => p.name.toLowerCase().includes(query.toLowerCase()) || p.type.toLowerCase().includes(query.toLowerCase())), [projects, query]);
   const completed = projects.filter(p => p.status === "Completed").length;
   const filteredProducts = storeProducts.filter(product => (product.name + " " + product.category + " " + product.description).toLowerCase().includes(storeQuery.toLowerCase()));
   const cartTotal = cart.reduce((sum, id) => sum + (storeProducts.find(product => product.id === id)?.price || 0), 0);
+  const trackedOrder = orders.find(order => order.id.toLowerCase() === trackingQuery.trim().toLowerCase() || order.trackingCode.toLowerCase() === trackingQuery.trim().toLowerCase());
+  const unreadNotifications = notifications.filter(item => !item.read).length;
 
   function notify(message: string) {
     setToast(message);
     window.setTimeout(() => setToast(""), 2800);
+  }
+
+  function addNotification(title: string, body: string) {
+    const item: StoreNotification = { id: "N-" + Date.now(), title, body, date: new Date().toLocaleString("en-IN"), read: false };
+    setNotifications(previous => [item, ...previous].slice(0, 50));
+  }
+
+  function saveCustomerProfile(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const next = { name: customerProfile.name.trim(), email: customerProfile.email.trim(), phone: customerProfile.phone.trim(), address: customerProfile.address.trim() };
+    if (!next.name || (!next.email && !next.phone)) { notify("Please add your name and at least one contact detail."); return; }
+    setCustomerProfile(next);
+    addNotification("Profile saved", "Your profile was saved in this browser.");
+    notify("Profile saved on this device.");
+  }
+
+  function placeOrder(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!cart.length) { notify("Your cart is empty. Add a package first."); setActiveNav("Store"); return; }
+    const name = checkoutForm.name.trim(), phone = checkoutForm.phone.trim(), email = checkoutForm.email.trim();
+    if (!name || (!phone && !email)) { notify("Please add your name and a phone number or email."); return; }
+    const orderId = "KS-" + Date.now().toString().slice(-8);
+    const order: StoreOrder = {
+      id: orderId, trackingCode: orderId,
+      items: cart.map(id => storeProducts.find(product => product.id === id)).filter((product): product is (typeof storeProducts)[number] => Boolean(product)).map(product => ({ id: product.id, name: product.name, price: product.price })),
+      total: cartTotal, customerName: name, email, phone, address: checkoutForm.address.trim(),
+      createdAt: new Date().toISOString(), status: "Quote requested", paymentStatus: "Not paid — quote only"
+    };
+    setOrders(previous => [order, ...previous]);
+    setCustomerProfile({ name, email, phone, address: checkoutForm.address.trim() });
+    setCart([]);
+    addNotification("Enquiry received", "Your order " + orderId + " was saved as a quote request. No payment was taken.");
+    setTrackingQuery(orderId);
+    setActiveNav("My orders");
+    notify("Quote request saved. No payment was taken.");
+  }
+
+  function updateOrderStatus(orderId: string, status: StoreOrder["status"]) {
+    setOrders(previous => previous.map(order => order.id === orderId ? { ...order, status } : order));
+    addNotification("Order status updated", orderId + " is now marked “" + status + "”.");
+    notify("Order status updated in this browser.");
+  }
+
+  function requestOtp(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!otpPhone.trim()) { notify("Enter your mobile number first."); return; }
+    notify("Real OTP sending is not configured yet. Twilio Verify credentials and server settings are required.");
+  }
+
+  function verifyOtp(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    notify("OTP verification is not active yet. This site will not pretend an OTP was verified.");
   }
 
   function createProject(e: React.FormEvent<HTMLFormElement>) {
