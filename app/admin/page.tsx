@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import type { CSSProperties, FormEvent } from "react";
 import { Activity, BarChart3, BriefcaseBusiness, CheckCircle2, ClipboardList, CreditCard, Download, FileText, FolderKanban, Gift, Headset, LayoutDashboard, LogOut, LockKeyhole, Package, QrCode, RefreshCw, Search, ShieldCheck, Users, WalletCards } from "lucide-react";
 
 type OrderRow = {
@@ -49,13 +50,13 @@ export default function AdminPage() {
       setOrders(data.orders || []); setAuthenticated(true);
     } catch (e) {
       const message = e instanceof Error ? e.message : "Could not connect.";
-      if (message.includes("Admin authentication required")) setAuthenticated(false);
+      if (message.includes("Admin authentication required")) { setAuthenticated(false); setError(""); }
       else setError(message);
     } finally { setChecking(false); }
   }
   useEffect(() => { setOrigin(window.location.origin); void loadOrders(); }, []);
 
-  async function login(event: React.FormEvent<HTMLFormElement>) {
+  async function login(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setLoading(true); setError("");
     try {
       const response = await fetch("/api/admin/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ password }) });
@@ -82,7 +83,7 @@ export default function AdminPage() {
   const filtered = useMemo(() => orders.filter(row => [row.name, row.email, row.service, row.project_name, row.id, detailsFor(row).orderId || ""].join(" ").toLowerCase().includes(query.toLowerCase())), [orders, query]);
   const totalValue = orders.reduce((sum, row) => sum + totalFor(row), 0);
   const pending = orders.filter(row => !["Completed", "Delivered", "Cancelled"].includes(row.status)).length;
-  const currencyRows = orders.filter(row => (detailsFor(row).paymentStatus || "").toLowerCase().includes("paid"));
+  const currencyRows = orders.filter(row => { const status = (detailsFor(row).paymentStatus || "").toLowerCase(); return status.startsWith("paid") && !status.startsWith("not paid"); });
   const qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=12&data=" + encodeURIComponent(origin);
 
   if (!authenticated) return <main style={styles.loginShell}>
@@ -142,7 +143,7 @@ function FeaturePanel({ icon: Icon, title, text, items }: { icon: typeof LayoutD
   return <section style={styles.panel}><div style={styles.featureHero}><span style={styles.featureIcon}><Icon size={24}/></span><div><h2 style={styles.sectionTitle}>{title}</h2><p style={styles.muted}>{text}</p></div></div><div style={styles.featureGrid}>{items.map(item=><article key={item} style={styles.featureItem}><CheckCircle2 size={17}/><span>{item}</span></article>)}</div><div style={styles.noticeCard}><ShieldCheck size={20}/><div><b>Secure-by-design rollout</b><p>These management sections are separated from customer pages. Any write or customer-specific data access should go through authenticated server endpoints.</p></div></div></section>;
 }
 
-const styles: Record<string, React.CSSProperties> = {
+const styles: Record<string, CSSProperties> = {
   shell:{minHeight:"100vh",display:"flex",background:"#f5f7fb",color:"#182235",fontFamily:"Inter,ui-sans-serif,system-ui,sans-serif"},
   sidebar:{width:260,background:"#fff",borderRight:"1px solid #e5eaf2",padding:"26px 16px",display:"flex",flexDirection:"column",flexShrink:0},
   logo:{fontSize:19,fontWeight:900,letterSpacing:"-.8px",textDecoration:"none",color:"#17233a",padding:"0 12px"},
