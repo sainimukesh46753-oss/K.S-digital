@@ -70,20 +70,11 @@ const navItems = [
   { label: "My orders", icon: ShoppingBag },
   { label: "Track order", icon: SearchCheck },
   { label: "Customer account", icon: Users },
-  { label: "Notifications", icon: Bell },
   { label: "Growth Kit", icon: Gift },
   { label: "Portfolio", icon: Sparkles },
   { label: "My files", icon: FileText },
-  { label: "Messages", icon: MessageSquare },
-  { label: "Invoices", icon: CreditCard },
   { label: "Settings", icon: Settings },
   { label: "Feedback", icon: MessageSquare },
-  { label: "Product management", icon: Package },
-  { label: "Payments", icon: WalletCards },
-  { label: "Returns & refunds", icon: RotateCcw },
-  { label: "Customer reviews", icon: Star },
-  { label: "Reports", icon: BarChart3 },
-  { label: "Admin panel", icon: ShieldCheck },
 ];
 
 type StoreOrder = {
