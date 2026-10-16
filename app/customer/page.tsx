@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Activity, ArrowDownRight, ArrowRight, ArrowUpRight, Bell, BriefcaseBusiness, Check, ChevronDown, CircleHelp, Command, CreditCard, FileText, FolderKanban, LayoutDashboard, Menu, MessageSquare, Plus, Search, Settings, ShieldCheck, Sparkles, TrendingUp, Users, X, Zap, Palette, SearchCheck, MousePointer2, Code2, Smartphone, Megaphone, Layers3, ShoppingBag, ShoppingCart, Heart, Bot, Send, Sun, Moon, UploadCloud, Download, Calculator, Gift, Mail, ClipboardCheck, HeartHandshake, Package, WalletCards, RotateCcw, Star, BarChart3 } from "lucide-react";
-import { backendConfigured, loadProfile, loadQuotes, mapBackendQuote, saveContactMessage, saveProfile as saveBackendProfile, saveQuote } from "../lib/ks-backend";
+import { backendConfigured, loadProfile, loadQuotes, mapBackendQuote, saveContactMessage, saveProfile as saveBackendProfile, saveQuote } from "../../lib/ks-backend";
 
 const initialProjects = [
   { id: 1, name: "E-commerce experience", type: "Website", status: "In progress", progress: 72, date: "Oct 18, 2026", image: "photo-1556742049-0cfed4f6a45d", color: "peach" },
@@ -325,7 +325,7 @@ export default function Home() {
       <a className="brand" href="#" onClick={() => setActiveNav("Overview")}><span className="brand-mark">KS<span>.</span></span><span className="brand-copy">KS Digital<small>CREATIVE WORKSPACE</small></span></a>
       <div className="workspace-switch"><span className="workspace-avatar">K</span><span><b>KS Studio</b><small>Creative workspace</small></span><ChevronDown size={15}/></div>
       <div className="side-label">WORKSPACE</div>
-      <nav className="side-nav">{navItems.filter(item => !["Product management", "Payments", "Returns & refunds", "Customer reviews", "Reports", "Admin panel"].includes(item.label)).map(item => { const Icon = item.icon; return <button key={item.label} className={activeNav === item.label ? "side-link active" : "side-link"} onClick={() => { setActiveNav(item.label); setMobileNav(false); }}><Icon size={18}/><span>{item.label}</span>{item.label === "Messages" && <i className="nav-count">3</i>}</button>; })}</nav>
+      <nav className="side-nav">{navItems.filter(item => !["Product management", "Payments", "Returns & refunds", "Customer reviews", "Reports", "Admin panel", "Notifications", "Messages", "My orders", "Track order", "Order details", "Invoices"].includes(item.label)).map(item => { const Icon = item.icon; return <button key={item.label} className={activeNav === item.label ? "side-link active" : "side-link"} onClick={() => { setActiveNav(item.label); setMobileNav(false); }}><Icon size={18}/><span>{item.label}</span>{item.label === "Messages" && <i className="nav-count">3</i>}</button>; })}</nav>
       <div className="side-label tools-label">QUICK ACCESS</div>
       <button className="side-link" onClick={() => { setActiveNav("Projects"); setMobileNav(false); }}><Zap size={18}/><span>My shortcuts</span></button>
       <button className="side-link" onClick={() => notify("Help centre is a preview feature.")}><CircleHelp size={18}/><span>Help & support</span></button>
