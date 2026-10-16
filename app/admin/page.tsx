@@ -149,7 +149,10 @@ export default function AdminPage() {
         .ks-admin-table-wrap table { min-width: 760px; }
       }
     `}</style>
-  </main>;\n}\n\nfunction OrderTable({ rows, onStatus, showPayment = false }: { rows: OrderRow[]; onStatus: (id:string,status:string)=>void; showPayment?: boolean }) {
+  </main>;
+}
+
+function OrderTable({ rows, onStatus, showPayment = false }: { rows: OrderRow[]; onStatus: (id:string,status:string)=>void; showPayment?: boolean }) {
   if (!rows.length) return <div style={styles.empty}><ClipboardList size={26}/><b>No matching order requests</b><span>Requests saved to Supabase will appear here.</span></div>;
   return <div className="ks-admin-table-wrap" style={styles.tableWrap}><table style={styles.table}><thead><tr><th>ORDER / CUSTOMER</th><th>SERVICE & ITEMS</th><th>AMOUNT</th><th>STATUS</th>{showPayment && <th>PAYMENT</th>}<th>DATE</th></tr></thead><tbody>{rows.map(row=>{const detail=detailsFor(row);return <tr key={row.id}><td><b>{detail.orderId || row.id.slice(0,8)}</b><span style={styles.cellSub}>{row.name || "Customer"}</span><span style={styles.cellSub}>{row.email}</span>{detail.phone && <span style={styles.cellSub}>{detail.phone}</span>}</td><td><b>{row.service}</b><span style={styles.cellSub}>{(detail.items||[]).map(item=>item.name).join(", ") || row.project_name || "Details not available"}</span>{detail.address && <span style={styles.cellSub}>{detail.address}</span>}</td><td><b>{money(totalFor(row))}</b></td><td><select style={styles.statusSelect} aria-label={"Update status for "+row.name} value={row.status} onChange={e=>onStatus(row.id,e.target.value)}>{["New","In Progress","Completed","Cancelled","Confirmed","Shipped","Delivered"].map(status=><option key={status}>{status}</option>)}</select></td>{showPayment && <td><span style={styles.paymentBadge}>{detail.paymentStatus || "Unverified / not recorded"}</span></td>}<td>{new Date(row.created_at).toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})}</td></tr>;})}</tbody></table></div>;
 }
