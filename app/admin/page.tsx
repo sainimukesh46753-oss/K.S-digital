@@ -131,7 +131,25 @@ export default function AdminPage() {
       {tab === "QR Business Card" && <section style={styles.panel}><div style={styles.panelHead}><div><h2 style={styles.sectionTitle}>KS Digital QR & digital business card</h2><p style={styles.muted}>Scan to open the current website URL.</p></div><QrCode size={24}/></div><div className="ks-admin-qr-layout" style={styles.qrLayout}><div style={styles.qrBox}><img src={qrUrl} alt="QR code for the KS Digital website" width="220" height="220"/><small>{origin}</small></div><div><h3 style={styles.sectionTitle}>Share your digital presence</h3><p style={styles.muted}>Print this QR code on a business card or brochure to direct visitors to the website. Check that the deployed domain is correct before printing.</p><button style={styles.primary} onClick={()=>{void navigator.clipboard.writeText(origin);setNotice("Website link copied.");}}>Copy website link</button><button style={styles.secondary} onClick={()=>window.open(origin,"_blank","noopener,noreferrer")}>Open website ↗</button></div></div></section>}
       <footer style={styles.footer}>© {new Date().getFullYear()} KS Digital · Private administrator workspace · <a href="/customer">Customer workspace</a></footer>
     </section>
-  </section>\n  <style jsx global>{`\n    @media (max-width: 900px) {\n      .ks-admin-shell { display: block !important; }\n      .ks-admin-sidebar { width: auto !important; padding: 14px !important; border-right: 0 !important; border-bottom: 1px solid #e5eaf2; }\n      .ks-admin-sidebar > p, .ks-admin-sidebar > .admin-unused { display: none !important; }\n      .ks-admin-nav { display: flex !important; gap: 6px !important; overflow-x: auto; padding: 8px 0; }\n      .ks-admin-nav button { white-space: nowrap; flex: 0 0 auto; }\n      .ks-admin-sidebar > div:last-child { padding-top: 10px !important; }\n      .ks-admin-main { padding: 20px 14px !important; }\n      .ks-admin-hero-art { display: none !important; }\n    }\n    @media (max-width: 560px) {\n      .ks-admin-qr-layout { grid-template-columns: 1fr !important; }\n      .ks-admin-main header { align-items: flex-start !important; }\n      .ks-admin-main h1 { font-size: 22px !important; }\n      .ks-admin-table-wrap table { min-width: 760px; }\n    }\n  `}</style>\n  </main>;\n}\n\nfunction OrderTable({ rows, onStatus, showPayment = false }: { rows: OrderRow[]; onStatus: (id:string,status:string)=>void; showPayment?: boolean }) {
+    <style jsx global>{`
+      @media (max-width: 900px) {
+        .ks-admin-shell { display: block !important; }
+        .ks-admin-sidebar { width: auto !important; padding: 14px !important; border-right: 0 !important; border-bottom: 1px solid #e5eaf2; }
+        .ks-admin-sidebar > p { display: none !important; }
+        .ks-admin-nav { display: flex !important; gap: 6px !important; overflow-x: auto; padding: 8px 0; }
+        .ks-admin-nav button { white-space: nowrap; flex: 0 0 auto; }
+        .ks-admin-sidebar > div:last-child { padding-top: 10px !important; }
+        .ks-admin-main { padding: 20px 14px !important; }
+        .ks-admin-hero-art { display: none !important; }
+      }
+      @media (max-width: 560px) {
+        .ks-admin-qr-layout { grid-template-columns: 1fr !important; }
+        .ks-admin-main header { align-items: flex-start !important; }
+        .ks-admin-main h1 { font-size: 22px !important; }
+        .ks-admin-table-wrap table { min-width: 760px; }
+      }
+    `}</style>
+  </main>;\n}\n\nfunction OrderTable({ rows, onStatus, showPayment = false }: { rows: OrderRow[]; onStatus: (id:string,status:string)=>void; showPayment?: boolean }) {
   if (!rows.length) return <div style={styles.empty}><ClipboardList size={26}/><b>No matching order requests</b><span>Requests saved to Supabase will appear here.</span></div>;
   return <div className="ks-admin-table-wrap" style={styles.tableWrap}><table style={styles.table}><thead><tr><th>ORDER / CUSTOMER</th><th>SERVICE & ITEMS</th><th>AMOUNT</th><th>STATUS</th>{showPayment && <th>PAYMENT</th>}<th>DATE</th></tr></thead><tbody>{rows.map(row=>{const detail=detailsFor(row);return <tr key={row.id}><td><b>{detail.orderId || row.id.slice(0,8)}</b><span style={styles.cellSub}>{row.name || "Customer"}</span><span style={styles.cellSub}>{row.email}</span>{detail.phone && <span style={styles.cellSub}>{detail.phone}</span>}</td><td><b>{row.service}</b><span style={styles.cellSub}>{(detail.items||[]).map(item=>item.name).join(", ") || row.project_name || "Details not available"}</span>{detail.address && <span style={styles.cellSub}>{detail.address}</span>}</td><td><b>{money(totalFor(row))}</b></td><td><select style={styles.statusSelect} aria-label={"Update status for "+row.name} value={row.status} onChange={e=>onStatus(row.id,e.target.value)}>{["New","In Progress","Completed","Cancelled","Confirmed","Shipped","Delivered"].map(status=><option key={status}>{status}</option>)}</select></td>{showPayment && <td><span style={styles.paymentBadge}>{detail.paymentStatus || "Unverified / not recorded"}</span></td>}<td>{new Date(row.created_at).toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})}</td></tr>;})}</tbody></table></div>;
 }
